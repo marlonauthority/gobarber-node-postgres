@@ -13,3 +13,6 @@ jspm_packages/
 
 /tmp/uploads
 /dist
+/*.js
+
+yarn.lock
