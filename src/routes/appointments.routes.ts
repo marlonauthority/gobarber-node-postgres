@@ -1,14 +1,9 @@
 import { Router } from 'express';
-import { uuid } from 'uuidv4';
 import { startOfHour, parseISO, isEqual } from 'date-fns'; // parseiso converte string no obj New Date do js
 
-const appointmentsRouter = Router();
+import Appointment from '../models/Appointment';
 
-interface Appointment {
-  id: string;
-  providerName: string;
-  date: Date;
-}
+const appointmentsRouter = Router();
 
 const listAppointments: Appointment[] = [];
 
@@ -26,11 +21,7 @@ appointmentsRouter.post('/', (request, response) => {
       .status(400)
       .json({ message: 'Já existe um agendamento marcado nesta data.' });
 
-  const appointment = {
-    id: uuid(),
-    providerName,
-    date: parsedDate,
-  };
+  const appointment = new Appointment(providerName, parsedDate);
 
   listAppointments.push(appointment);
 
