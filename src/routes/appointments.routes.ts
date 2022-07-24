@@ -14,7 +14,7 @@ appointmentsRouter.get('/', (request, response) => {
 });
 
 appointmentsRouter.post('/', (request, response) => {
-  const { providerName, date } = request.body;
+  const { provider, date } = request.body;
 
   const parsedDate = startOfHour(parseISO(date));
 
@@ -26,7 +26,10 @@ appointmentsRouter.post('/', (request, response) => {
       .status(400)
       .json({ message: 'Já existe um agendamento marcado nesta data.' });
 
-  const appointment = appointmentsRepository.create(providerName, parsedDate);
+  const appointment = appointmentsRepository.create({
+    provider,
+    date: parsedDate,
+  });
 
   return response.json(appointment);
 });

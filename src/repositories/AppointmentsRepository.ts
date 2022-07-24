@@ -1,6 +1,11 @@
 import isEqual from 'date-fns/isEqual';
 import Appointment from '../models/Appointment';
 
+interface CreateAppointDataTransferObject {
+  provider: string;
+  date: Date;
+}
+
 class AppointmentsRepository {
   private appointments: Appointment[];
 
@@ -20,8 +25,11 @@ class AppointmentsRepository {
     return findAppointment || null;
   }
 
-  public create(providerName: string, date: Date): Appointment {
-    const appointment = new Appointment(providerName, date);
+  public create({
+    provider,
+    date,
+  }: CreateAppointDataTransferObject): Appointment {
+    const appointment = new Appointment({ provider, date });
 
     this.appointments.push(appointment);
     return appointment;
