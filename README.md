@@ -7,7 +7,7 @@ Essa é versão 3 de implementação.
 - A Versão 2 pode ser encontrada na branch desde mesmo repositório ```git checkout v2```
 
 
--- Rodar o DB com docker
+## DB com docker
 ```
 docker run --name gostack_postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 ```
@@ -27,3 +27,10 @@ docker start id ou name
 ```
 
 
+## Migrations
+```
+yarn typeorm migration:create -n CreateAppointments
+```
+```
+yarn typeorm migration:run
+```
