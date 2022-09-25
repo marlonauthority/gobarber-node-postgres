@@ -1,55 +1,52 @@
 import fs from 'fs';
-import path from 'path';
 import mime from 'mime';
-import aws, { S3 } from 'aws-sdk';
+import path from 'path';
+import aws from 'aws-sdk';
 
 import uploadConfig from '@config/upload';
+import IStoreProvider from '@shared/container/providers/StorageProvider/models/IStorageProviders';
 
-import AppError from '@shared/errors/AppError';
+export default class S3StorageProvider implements IStoreProvider {
+  private client: aws.S3;
 
-import IStorageProvider from '../models/IStorageProvider';
+  constructor() {
+    this.client = new aws.S3({
+      region: 'us-east-1',
+    });
+  }
 
-class S3StorageProvider implements IStorageProvider {
-    private client: S3;
+  public async saveFile(file: string): Promise<string> {
+    const originalPath = path.resolve(uploadConfig.tmpFolder, file);
 
-    constructor() {
-        this.client = new aws.S3({
-            region: 'us-east-1',
-        });
+    const ContentType = mime.getType(originalPath);
+
+    if (!ContentType) {
+      throw new Error('File not found');
     }
 
-    public async saveFile(file: string): Promise<string> {
-        const originalPath = path.resolve(uploadConfig.tmpFolder, file);
-        const ContentType = mime.getType(originalPath);
+    const fileContent = await fs.promises.readFile(originalPath);
 
-        if (!ContentType) {
-            throw new AppError('File not found');
-        }
-        const fileContent = await fs.promises.readFile(originalPath);
+    await this.client
+      .putObject({
+        Bucket: uploadConfig.config.aws.bucket,
+        Key: file,
+        ACL: 'public-read',
+        Body: fileContent,
+        ContentType,
+      })
+      .promise();
 
-        await this.client
-            .putObject({
-                Bucket: uploadConfig.config.aws.bucket,
-                Key: file,
-                ACL: 'public-read',
-                Body: fileContent,
-                ContentType,
-            })
-            .promise();
+    await fs.promises.unlink(originalPath);
 
-        await fs.promises.unlink(originalPath);
+    return file;
+  }
 
-        return file;
-    }
-
-    public async deleteFile(file: string): Promise<void> {
-        await this.client
-            .deleteObject({
-                Bucket: uploadConfig.config.aws.bucket,
-                Key: file,
-            })
-            .promise();
-    }
+  public async deleteFile(file: string): Promise<void> {
+    await this.client
+      .deleteObject({
+        Bucket: uploadConfig.config.aws.bucket,
+        Key: file,
+      })
+      .promise();
+  }
 }
-
-export default S3StorageProvider;

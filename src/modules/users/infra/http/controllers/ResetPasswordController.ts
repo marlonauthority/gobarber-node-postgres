@@ -3,22 +3,14 @@ import { container } from 'tsyringe';
 
 import ResetPasswordService from '@modules/users/services/ResetPasswordService';
 
-class ResetPasswordController {
-    public async create(
-        request: Request,
-        response: Response,
-    ): Promise<Response> {
-        const { password, token } = request.body;
+export default class ResetPasswordController {
+  public async create(req: Request, res: Response): Promise<Response> {
+    const { password, token } = req.body;
 
-        const resetPassword = container.resolve(ResetPasswordService);
+    const resetPassword = container.resolve(ResetPasswordService);
 
-        await resetPassword.execute({
-            password,
-            token,
-        });
+    await resetPassword.execute({ token, password });
 
-        return response.status(204).json();
-    }
+    return res.status(204).json();
+  }
 }
-
-export default ResetPasswordController;

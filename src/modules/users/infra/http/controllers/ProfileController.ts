@@ -1,41 +1,35 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-
 import { classToClass } from 'class-transformer';
 
 import UpdateProfileService from '@modules/users/services/UpdateProfileService';
 import ShowProfileService from '@modules/users/services/ShowProfileService';
 
-class ProfileController {
-    public async show(request: Request, response: Response): Promise<Response> {
-        const user_id = request.user.id;
-        const showProfile = container.resolve(ShowProfileService);
+export default class ProfileController {
+  public async show(req: Request, res: Response): Promise<Response> {
+    const user_id = req.user.id;
 
-        const user = await showProfile.execute({
-            user_id,
-        });
+    const showProfile = container.resolve(ShowProfileService);
 
-        return response.json(classToClass(user));
-    }
+    const user = await showProfile.execute({ user_id });
 
-    public async update(
-        request: Request,
-        response: Response,
-    ): Promise<Response> {
-        const user_id = request.user.id;
-        const { name, email, old_password, password } = request.body;
+    return res.json(classToClass(user));
+  }
 
-        const updateProfile = container.resolve(UpdateProfileService);
-        const user = await updateProfile.execute({
-            user_id,
-            name,
-            email,
-            old_password,
-            password,
-        });
+  public async update(req: Request, res: Response): Promise<Response> {
+    const user_id = req.user.id;
+    const { name, email, password, old_password } = req.body;
 
-        return response.json(classToClass(user));
-    }
+    const updateProfile = container.resolve(UpdateProfileService);
+
+    const user = await updateProfile.execute({
+      name,
+      email,
+      old_password,
+      password,
+      user_id,
+    });
+
+    return res.json(classToClass(user));
+  }
 }
-
-export default ProfileController;

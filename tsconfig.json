@@ -1,28 +1,25 @@
 {
-  "compilerOptions": {    
-    "target": "es5",                         
+  "compilerOptions": {
+    "target": "es2017",
     "module": "commonjs",
-    "outDir": "./dist",                     
-    "rootDir": "./src", 
-    "strict": true,  
-    "strictPropertyInitialization": false,       
-     "baseUrl": "./src", 
-     "allowJs": true,                   
-     "paths": {
-        "@modules/*": ["modules/*"],
-        "@config/*": ["config/*"],
-        "@shared/*": ["shared/*"]
-     },
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "baseUrl": "./src",
+    "allowJs": true,
+    "paths": {
+      "@modules/*": ["modules/*"],
+      "@config/*": ["config/*"],
+      "@shared/*": ["shared/*"]
+    },
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "forceConsistentCasingInFileNames": true   
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": true
   },
-  "exclude": [
-    "node_modules",
-    "coverage",
-    "./jest.config.js",
-    "./prettier.config.js",
-    "./commitlint.config.js"    
+  "include": [
+    "src/**/*"
   ]
 }
