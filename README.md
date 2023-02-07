@@ -1,48 +1,46 @@
-API em Node Js para agendamento de serviços
+API em Node Js para agendamento de serviços.
 
-<img src=".github/example.gif">
+Essa é versão 3 de implementação.
 
-# Instalação
+- Versão 1 pode ser encontrada [aqui](https://github.com/marlondenisck/nodejs-nunjucks-agendamento-servicos)
 
-- Rode **yarn** ou **npm install** para dependencias.
-- Suba as databases
-- Preencha o **.env**
-- Start a aplicação e a fila dos emails
+- A Versão 2 pode ser encontrada na branch desde mesmo repositório ```git checkout v2```
 
+
+## DB's com docker
+
+- `docker run --name gostack_redis -p 6379:6379 -d -t redis:alpine`;
+- `docker run --name gostack_mongo -p 27017:27017 -d -t mongo`;
+- `docker run --name gostack_postgres -e POSTGRES_PASSWORD=docker -p 5433:5432 -d postgres`;
+
+
+-- caso precise verificar se a porta esta em uso
 ```
-yarn dev
-```
-
-```
-yarn queue
-```
-
-- Migre as tabelas
-
-```
-yarn sequelize db:migrate
+lsof -i :5432
 ```
 
-- Migre o seed
-
+-- Verificar se o db esta executando
 ```
-yarn sequelize db:seed:all
+docker ps
 ```
 
-## Database no Docker
+-- Para subir novamente
+```
+docker start id ou name
+```
+## ENV
+-- crie uma copia do env.example para .env e preencha corretamente com os dados dos bancos criados na etapa anterior.
 
-- docker run --name database -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+## Migrations
+Exemplo de como criar migrations
+ps: Não é necessário executar
+```
+yarn typeorm migration:create -n CreateAppointments
+```
 
-- docker run --name redisbarber -p 6379:6379 -d -t redis:alpine
+# Iniciando o servidor
 
-- docker run --name mongobarber -p 27017:27017 -d -t mongo
+- Com docker, os bancos instalados e o  arquivo .env configurado rode no terminal
+- Execute ```yarn typeorm migration:run``` para rodar as migrations
+- Execute ```yarn dev:server``` para rodar o servidor
 
----
-
-### Frontend
-
-- <a href="https://github.com/marlonauthority/reactjs-appointments-services">React Js Agendamento de Serviços</a>
-
-### Mobile
-
-- <a href="https://github.com/marlonauthority/react-native-appointments-services">React Native Agendamento de Serviços</a>
